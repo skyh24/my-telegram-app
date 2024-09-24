@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram 计数器小程序</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .container {
+            text-align: center;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: var(--tg-theme-button-color, #3390ec);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 5px;
+        }
+        #counter {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>计数器小程序</h1>
+        <div id="counter">0</div>
+        <button id="increment">增加</button>
+        <button id="decrement">减少</button>
+    </div>
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let counter = 0;
+        const counterElement = document.getElementById('counter');
+        const incrementButton = document.getElementById('increment');
+        const decrementButton = document.getElementById('decrement');
+
+        incrementButton.addEventListener('click', () => {
+            counter++;
+            updateCounter();
+        });
+
+        decrementButton.addEventListener('click', () => {
+            counter--;
+            updateCounter();
+        });
+
+        function updateCounter() {
+            counterElement.textContent = counter;
+            tg.MainButton.setText(`当前计数：${counter}`);
+            if (counter !== 0) {
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
+        tg.MainButton.onClick(() => {
+            tg.sendData(counter.toString());
+        });
+
+        tg.ready();
+    </script>
+</body>
+</html>
